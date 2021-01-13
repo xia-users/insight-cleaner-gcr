@@ -1,5 +1,8 @@
-Flask
-gunicorn
 google-cloud-logging
+Flask
+xialib-firestore
+xialib-gcs
 xialib
+gunicorn
 pyinsight
+google-cloud-firestore

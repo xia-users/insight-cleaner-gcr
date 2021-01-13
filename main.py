@@ -3,30 +3,36 @@ import json
 import base64
 import gzip
 import hashlib
+import configparser
 from flask import Flask, request, Response, render_template
 import google.auth
-from google.cloud import pubsub_v1
-from google.cloud import firestore
 import google.cloud.logging
-from xialib_gcp import PubsubPublisher, FirestoreDepositor, GCSStorer, GCSListArchiver
+from xialib.tools import get_object
 from pyinsight import Insight, Cleaner
 
 
 app = Flask(__name__)
 
 project_id = google.auth.default()[1]
-Insight.set_internal_channel(messager=PubsubPublisher(pub_client=pubsub_v1.PublisherClient()),
-                             channel=project_id,
-                             topic_cockpit='insight-cockpit',
-                             topic_cleaner='insight-cleaner',
-                             topic_merger='insight-merger',
-                             topic_packager='insight-packager',
-                             topic_loader='insight-loader',
-                             topic_backlog='insight-backlog'
+
+config = configparser.ConfigParser()
+config.read('service.ini')
+
+internal_publisher = get_object(**config['internal_messager'])
+internal_messager = get_object(pub_client=internal_publisher, **config['internal_publisher'])
+Insight.set_internal_channel(messager=internal_messager,
+                             channel=config['insight']['control_channel'],
+                             topic_cockpit=config['insight']['topic_cockpit'],
+                             topic_cleaner=config['insight']['topic_cleaner'],
+                             topic_merger=config['insight']['topic_merger'],
+                             topic_packager=config['insight']['topic_packager'],
+                             topic_loader=config['insight']['topic_loader'],
+                             topic_backlog=config['insight']['topic_backlog']
 )
 
-firestore_db = firestore.Client()
-gcs_storer = GCSStorer()
+depositor_db = get_object(**config['depositor.db'])
+archiver_storer = get_object(**config['archiver.storer'])
+
 client = google.cloud.logging.Client()
 client.get_default_handler()
 client.setup_logging()
@@ -42,10 +48,10 @@ def insight_cleaner():
         return "invalid Pub/Sub message format", 204
     data_header = envelope['message']['attributes']
 
-    global firestore_db
-    global gcs_storer
-    depositor = FirestoreDepositor(db=firestore_db)
-    archiver = GCSListArchiver(storer=gcs_storer)
+    global depositor_db
+    global archiver_storer
+    depositor = get_object(db=depositor_db, **config['depositor'])
+    archiver = get_object(storer=archiver_storer, **config['archiver'])
     cleaner = Cleaner(archiver=archiver, depositor=depositor)
 
     if cleaner.clean_data(data_header['topic_id'], data_header['table_id'], data_header['start_seq']):

@@ -1,0 +1,25 @@
+{
+    "_module": "pyinsight",
+    "_class": "Cleaner",
+    "depositor": {
+        "_type": "object",
+        "_class": "FirestoreDepositor",
+        "_module": "xialib_firestore",
+        "db": {
+            "_type": "object",
+            "_module": "google.cloud.firestore",
+            "_class": "Client"
+        }
+    },
+    "archiver": {
+        "_type": "object",
+        "_class": "IOListArchiver",
+        "_module": "xialib",
+        "fs": {
+            "_type": "object",
+            "_module": "xialib_gcs",
+            "_class": "GCSStorer"
+        }
+    },
+    "_type": "object"
+}
