@@ -6,3 +6,4 @@ xialib
 gunicorn
 pyinsight
 google-cloud-firestore
+google-cloud-pubsub

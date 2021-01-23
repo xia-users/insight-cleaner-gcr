@@ -6,9 +6,10 @@
         "_class": "FirestoreDepositor",
         "_module": "xialib_firestore",
         "db": {
-            "_type": "object",
+            "_type": "global",
             "_module": "google.cloud.firestore",
-            "_class": "Client"
+            "_class": "Client",
+            "_name": "firestore"
         }
     },
     "archiver": {
@@ -16,9 +17,10 @@
         "_class": "IOListArchiver",
         "_module": "xialib",
         "fs": {
-            "_type": "object",
+            "_type": "global",
             "_module": "xialib_gcs",
-            "_class": "GCSStorer"
+            "_class": "GCSStorer",
+            "_name": "gcsstorer"
         }
     },
     "_type": "object"

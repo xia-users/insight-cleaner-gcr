@@ -1,0 +1,13 @@
+{
+  "publisher": {
+    "_type": "object",
+    "_class": "PubsubPublisher",
+    "_module": "xialib_pubsub",
+    "pub": {
+      "_type": "global",
+      "_module": "google.cloud.pubsub_v1",
+      "_class": "PublisherClient",
+      "_name": "pubsub"
+    }
+  }
+}

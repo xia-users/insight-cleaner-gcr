@@ -1,37 +1,25 @@
 import os
-import json
-import base64
-import gzip
-import hashlib
-import configparser
 from flask import Flask, request, Response, render_template
 import google.auth
 import google.cloud.logging
-from xialib.tools import get_object
+from xialib.service import service_factory
 from pyinsight import Insight, Cleaner
 
-
+# Global Setting
 app = Flask(__name__)
-
 project_id = google.auth.default()[1]
 
-config = configparser.ConfigParser()
-config.read('service.ini')
-
-internal_publisher = get_object(**config['internal_messager'])
-internal_messager = get_object(pub_client=internal_publisher, **config['internal_publisher'])
-Insight.set_internal_channel(messager=internal_messager,
-                             channel=config['insight']['control_channel'],
-                             topic_cockpit=config['insight']['topic_cockpit'],
-                             topic_cleaner=config['insight']['topic_cleaner'],
-                             topic_merger=config['insight']['topic_merger'],
-                             topic_packager=config['insight']['topic_packager'],
-                             topic_loader=config['insight']['topic_loader'],
-                             topic_backlog=config['insight']['topic_backlog']
+global_connectors = service_factory({})
+insight_config = {}
+Insight.set_internal_channel(messager=global_connectors.get(insight_config['publisher']),
+                             channel=insight_config['insight']['control_channel'],
+                             topic_cockpit=insight_config['insight']['control_topics']['cockpit'],
+                             topic_cleaner=insight_config['insight']['control_topics']['cleaner'],
+                             topic_merger=insight_config['insight']['control_topics']['merger'],
+                             topic_packager=insight_config['insight']['control_topics']['packager'],
+                             topic_loader=insight_config['insight']['control_topics']['loader'],
+                             topic_backlog=insight_config['insight']['control_topics']['backlog']
 )
-
-depositor_db = get_object(**config['depositor.db'])
-archiver_storer = get_object(**config['archiver.storer'])
 
 client = google.cloud.logging.Client()
 client.get_default_handler()
@@ -48,12 +36,7 @@ def insight_cleaner():
         return "invalid Pub/Sub message format", 204
     data_header = envelope['message']['attributes']
 
-    global depositor_db
-    global archiver_storer
-    depositor = get_object(db=depositor_db, **config['depositor'])
-    archiver = get_object(storer=archiver_storer, **config['archiver'])
-    cleaner = Cleaner(archiver=archiver, depositor=depositor)
-
+    cleaner = service_factory({}, global_connectors)
     if cleaner.clean_data(data_header['topic_id'], data_header['table_id'], data_header['start_seq']):
         return "clean message received", 200
     else:  # pragma: no cover
