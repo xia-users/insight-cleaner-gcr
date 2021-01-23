@@ -1,4 +1,5 @@
 import os
+import json
 from flask import Flask, request, Response, render_template
 import google.auth
 import google.cloud.logging
@@ -9,9 +10,16 @@ from pyinsight import Insight, Cleaner
 app = Flask(__name__)
 project_id = google.auth.default()[1]
 
+# Configuration Load
+with open(os.path.join('.', 'config', 'insight_config.json')) as fp:
+    insight_config = json.load(fp)
+with open(os.path.join('.', 'config', 'global_conn_config.json')) as fp:
+    global_conn_config = json.load(fp)
+with open(os.path.join('.', 'config', 'object_config.json')) as fp:
+    object_config = json.load(fp)
+
 # Global Object Factory
-insight_config = {}
-global_connectors = service_factory({})
+global_connectors = service_factory(global_conn_config)
 insight_messager = service_factory(insight_config['publisher'])
 Insight.set_internal_channel(messager=insight_messager,
                              channel=insight_config['insight']['control_channel'],
@@ -39,7 +47,7 @@ def insight_cleaner():
         return "invalid Pub/Sub message format", 204
     data_header = envelope['message']['attributes']
 
-    cleaner = service_factory({}, global_connectors)
+    cleaner = service_factory(object_config, global_connectors)
     if cleaner.clean_data(data_header['topic_id'], data_header['table_id'], data_header['start_seq']):
         return "clean message received", 200
     else:  # pragma: no cover
