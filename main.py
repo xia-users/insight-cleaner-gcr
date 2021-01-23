@@ -9,9 +9,11 @@ from pyinsight import Insight, Cleaner
 app = Flask(__name__)
 project_id = google.auth.default()[1]
 
-global_connectors = service_factory({})
+# Global Object Factory
 insight_config = {}
-Insight.set_internal_channel(messager=global_connectors.get(insight_config['publisher']),
+global_connectors = service_factory({})
+insight_messager = service_factory(insight_config['publisher'])
+Insight.set_internal_channel(messager=insight_messager,
                              channel=insight_config['insight']['control_channel'],
                              topic_cockpit=insight_config['insight']['control_topics']['cockpit'],
                              topic_cleaner=insight_config['insight']['control_topics']['cleaner'],
@@ -21,6 +23,7 @@ Insight.set_internal_channel(messager=global_connectors.get(insight_config['publ
                              topic_backlog=insight_config['insight']['control_topics']['backlog']
 )
 
+# Log configuration
 client = google.cloud.logging.Client()
 client.get_default_handler()
 client.setup_logging()

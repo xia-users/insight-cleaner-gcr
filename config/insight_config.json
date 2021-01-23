@@ -1,4 +1,13 @@
 {
+  "control_channel": "",
+  "control_topics": {
+    "cockpit": "insight-cockpit",
+    "cleaner": "insight-cleaner",
+    "merger": "insight-merger",
+    "packager": "insight-packager",
+    "loader": "insight-loader",
+    "backlog": "insight-backlog"
+  },
   "publisher": {
     "_type": "object",
     "_class": "PubsubPublisher",
