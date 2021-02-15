@@ -7,21 +7,21 @@
         "_module": "xialib_firestore",
         "db": {
             "_type": "global",
-            "_module": "google.cloud.firestore",
-            "_class": "Client",
             "_name": "firestore"
         }
     },
     "archiver": {
         "_type": "object",
-        "_class": "IOListArchiver",
+        "_class": "IoListArchiver",
         "_module": "xialib",
         "fs": {
             "_type": "global",
-            "_module": "xialib_gcs",
-            "_class": "GCSStorer",
             "_name": "gcsstorer"
         }
+    },
+    "_deploy": {
+        "name": "cloud-run-insight-cleaner",
+        "user": "insight-cleaner"
     },
     "_type": "object"
 }
