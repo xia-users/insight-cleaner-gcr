@@ -20,15 +20,15 @@ with open(os.path.join('.', 'config', 'object_config.json')) as fp:
 
 # Global Object Factory
 global_connectors = service_factory(global_conn_config)
-insight_messager = service_factory(insight_config['publisher'])
+insight_messager = service_factory(insight_config['messager'], global_connectors)
 Insight.set_internal_channel(messager=insight_messager,
-                             channel=insight_config['insight']['control_channel'],
-                             topic_cockpit=insight_config['insight']['control_topics']['cockpit'],
-                             topic_cleaner=insight_config['insight']['control_topics']['cleaner'],
-                             topic_merger=insight_config['insight']['control_topics']['merger'],
-                             topic_packager=insight_config['insight']['control_topics']['packager'],
-                             topic_loader=insight_config['insight']['control_topics']['loader'],
-                             topic_backlog=insight_config['insight']['control_topics']['backlog']
+                             channel=insight_config.get('control_channel', project_id),
+                             topic_cockpit=insight_config['control_topics']['cockpit'],
+                             topic_cleaner=insight_config['control_topics']['cleaner'],
+                             topic_merger=insight_config['control_topics']['merger'],
+                             topic_packager=insight_config['control_topics']['packager'],
+                             topic_loader=insight_config['control_topics']['loader'],
+                             topic_backlog=insight_config['control_topics']['backlog']
 )
 
 # Log configuration
@@ -39,6 +39,7 @@ client.setup_logging()
 @app.route('/', methods=['GET', 'POST'])
 def insight_cleaner():
     if request.method == 'GET':
+        cleaner = service_factory(object_config, global_connectors)
         return render_template("index.html"), 200
     envelope = request.get_json()
     if not envelope:
