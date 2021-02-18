@@ -38,9 +38,12 @@ client.setup_logging()
 
 @app.route('/', methods=['GET', 'POST'])
 def insight_cleaner():
+    print(json.dumps(object_config))
     if request.method == 'GET':
         cleaner = service_factory(object_config, global_connectors)
         return render_template("index.html"), 200
+    cleaner = service_factory(object_config, global_connectors)
+
     envelope = request.get_json()
     if not envelope:
         return "no Pub/Sub message received", 204
@@ -48,7 +51,7 @@ def insight_cleaner():
         return "invalid Pub/Sub message format", 204
     data_header = envelope['message']['attributes']
 
-    cleaner = service_factory(object_config, global_connectors)
+
     if cleaner.clean_data(data_header['topic_id'], data_header['table_id'], data_header['start_seq']):
         return "clean message received", 200
     else:  # pragma: no cover

@@ -12,6 +12,6 @@
     "gcsstorer": {
         "_type": "object",
         "_module": "xialib_gcs",
-        "_class": "GCSStorer"
+        "_class": "GcsStorer"
     }
 }

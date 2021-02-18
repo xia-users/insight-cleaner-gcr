@@ -5,6 +5,7 @@ ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY LICENSE LICENSE
+COPY requirements.txt requirements.txt
 COPY config config
 COPY static static
 COPY templates templates

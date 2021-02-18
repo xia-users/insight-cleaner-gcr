@@ -17,7 +17,7 @@ def test_homepage(client):
     assert response.status_code == 200
     assert b'Insight' in response.data
 
-"""
+
 def test_clean(client):
     header = {'topic_id': 'test-001', 'table_id': 'aged_data', 'start_seq': '99991231000000000000'}
     envoloppe = {'message': {'attributes': header,
@@ -25,6 +25,7 @@ def test_clean(client):
     response = client.post('/', json=envoloppe)
     assert response.status_code == 200
 
+"""
 def test_exceptions(client):
     envoloppe = ['Hello', 'World']
     response = client.post('/', json=envoloppe)

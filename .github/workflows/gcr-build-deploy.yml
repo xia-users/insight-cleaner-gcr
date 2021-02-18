@@ -1,0 +1,17 @@
+name: Google Cloud Run Build & Deploy
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Cloud SDK
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GCP_CRED }}
+
+    - name: Use gcloud CLI
+      run: gcloud info
