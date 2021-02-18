@@ -22,14 +22,16 @@ jobs:
 
     - name: Build & Publish
       run: |
-        docker build -t gcr.io/x-i-a-test/insight-cleaner1 .
-        docker push gcr.io/x-i-a-test/insight-cleaner1
+        PROJECT_ID=$(gcloud config list --format 'value(core.account)' | sed 's/.*@\(.*\)\.co.*/\1/')
+        docker build -t gcr.io/${PROJECT_ID}/insight-cleaner1 .
+        docker push gcr.io/${PROJECT_ID}/insight-cleaner1
 
     - name: Deploy
       run: |
-        gcloud run deploy insight-cleaner --image gcr.io/x-i-a-test/insight-cleaner1 \
-        --project x-i-a-test \
-        --service-account cloud-run-insight-cleaner@x-i-a-test.iam.gserviceaccount.com \
+        PROJECT_ID=$(gcloud config list --format 'value(core.account)' | sed 's/.*@\(.*\)\.co.*/\1/')
+        gcloud run deploy insight-cleaner --image gcr.io/${PROJECT_ID}/insight-cleaner1 \
+        --project ${PROJECT_ID} \
+        --service-account cloud-run-insight-cleaner@${PROJECT_ID}.iam.gserviceaccount.com \
         --region europe-west1 \
         --platform managed \
         --allow-unauthenticated \
