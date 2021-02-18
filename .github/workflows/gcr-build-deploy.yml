@@ -22,12 +22,12 @@ jobs:
 
     - name: Build & Publish
       run: |
-        docker build -t gcr.io/x-i-a-test/insight-cleaner .
-        docker push gcr.io/x-i-a-test/insight-cleaner
+        docker build -t gcr.io/x-i-a-test/insight-cleaner1 .
+        docker push gcr.io/x-i-a-test/insight-cleaner1
 
     - name: Deploy
       run: |
-        gcloud run deploy insight-cleaner --image gcr.io/x-i-a-test/insight-cleaner \
+        gcloud run deploy insight-cleaner --image gcr.io/x-i-a-test/insight-cleaner1 \
         --project x-i-a-test \
         --service-account cloud-run-insight-cleaner@x-i-a-test.iam.gserviceaccount.com \
         --region europe-west1 \
