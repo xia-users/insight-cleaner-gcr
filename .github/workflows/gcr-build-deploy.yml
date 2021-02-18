@@ -16,5 +16,14 @@ jobs:
       with:
         service_account_key: ${{ secrets.GCP_SA_KEY }}
 
+    - name: Configure Docker
+      run: |
+        gcloud auth configure-docker
+
+    - name: Build & Publish
+      run: |
+        docker build -t gcr.io/x-i-a-test/insight-cleaner
+        docker push gcr.io/x-i-a-test/insight-cleaner
+
     - name: Use gcloud CLI
       run: gcloud info
