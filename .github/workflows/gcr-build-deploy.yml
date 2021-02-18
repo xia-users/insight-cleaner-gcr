@@ -22,7 +22,7 @@ jobs:
 
     - name: Build & Publish
       run: |
-        docker build -t gcr.io/x-i-a-test/insight-cleaner
+        docker build -t gcr.io/x-i-a-test/insight-cleaner .
         docker push gcr.io/x-i-a-test/insight-cleaner
 
     - name: Use gcloud CLI
