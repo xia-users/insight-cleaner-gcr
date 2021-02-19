@@ -34,18 +34,18 @@ jobs:
     - name: Role Assign
       run: |
         PROJECT_ID=$(gcloud config list --format 'value(core.account)' | sed 's/.*@\(.*\)\.iam\.gserviceaccount.*/\1/')
-        gcloud projects add-iam-policy-binding $${PROJECT_ID}
-          --member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
-		  --role=roles/pubsub.publisher
+        gcloud projects add-iam-policy-binding $${PROJECT_ID} \
+        --member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
+		--role=roles/pubsub.publisher
 	    gcloud projects add-iam-policy-binding $${PROJECT_ID} \
-		  --member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
-		  --role=roles/datastore.user
+		--member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
+		--role=roles/datastore.user
 	    gcloud projects add-iam-policy-binding $${PROJECT_ID} \
-		  --member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
-		  --role=roles/storage.objectAdmin
+		--member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
+		--role=roles/storage.objectAdmin
 	    gcloud projects add-iam-policy-binding $${PROJECT_ID} \
-		  --member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
-		  --role=roles/logging.logWriter
+		--member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
+		--role=roles/logging.logWriter
 
     - name: Deploy
       run: |
