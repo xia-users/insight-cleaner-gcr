@@ -19,7 +19,6 @@ jobs:
     - name: Configure Docker
       run: |
         gcloud auth configure-docker
-
     - name: Build & Publish
       run: |
         PROJECT_ID=$(gcloud config list --format 'value(core.account)' | sed 's/.*@\(.*\)\.iam\.gserviceaccount.*/\1/')
@@ -34,7 +33,6 @@ jobs:
     - name: Role Assign
       run: |
         PROJECT_ID=$(gcloud config list --format 'value(core.account)' | sed 's/.*@\(.*\)\.iam\.gserviceaccount.*/\1/')
-        gcloud iam service-accounts create cloud-run-cleaner
         gcloud projects add-iam-policy-binding $${PROJECT_ID} \
         --member=serviceAccount:cloud-run-cleaner@$${PROJECT_ID}.iam.gserviceaccount.com \
         --role=roles/pubsub.publisher
