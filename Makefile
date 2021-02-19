@@ -15,8 +15,7 @@ config: ## Setting deploy configuration
 	gcloud config set run/platform $${CLOUD_RUN_PLATFORM};
 
 init-users:
-	SERVICE_ACC=; \
-	gcloud iam service-accounts create $${SERVICE_ACC} \
+	gcloud iam service-accounts create ${{xia.sa-name}} \
 		--display-name "Cloud Run Insight Cleaner"; \
 	gcloud projects add-iam-policy-binding $${PROJECT_ID} \
 		--member=serviceAccount:$${SERVICE_ACC}@$${PROJECT_ID}.iam.gserviceaccount.com \
@@ -31,21 +30,17 @@ init-users:
 		--member=serviceAccount:$${SERVICE_ACC}@$${PROJECT_ID}.iam.gserviceaccount.com \
 		--role=roles/logging.logWriter;
 
-build-cleaner:
-	SERVICE_NAME=; \
+build:
 	@PROJECT_ID=$(shell gcloud config list --format 'value(core.project)'); \
-	cd cleaner; \
-	gcloud builds submit --tag gcr.io/$${PROJECT_ID}/$${SERVICE_NAME};
+	gcloud builds submit --tag gcr.io/$${PROJECT_ID}/xia-cleaner;
 
-deploy-cleaner:
-	SERVICE_ACC=; \
-	SERVICE_NAME=; \
+deploy:
 	@PROJECT_ID=$(shell gcloud config list --format 'value(core.project)'); \
 	CLOUD_RUN_REGION=$(shell gcloud config list --format 'value(run.region)'); \
 	CLOUD_RUN_PLATFORM=$(shell gcloud config list --format 'value(run.platform)'); \
-	gcloud run deploy insight-cleaner \
-		--image gcr.io/$${PROJECT_ID}/$${SERVICE_NAME} \
-    	--service-account $${SERVICE_ACC}@$${PROJECT_ID}.iam.gserviceaccount.com \
+	gcloud run deploy ${{xia.service-name}} \
+		--image gcr.io/$${PROJECT_ID}/ixia-cleaner \
+    	--service-account ${{xia.sa-name}}@$${PROJECT_ID}.iam.gserviceaccount.com \
 		--region $${CLOUD_RUN_REGION} \
 		--platform $${CLOUD_RUN_PLATFORM} \
 		--no-allow-unauthenticated; \
