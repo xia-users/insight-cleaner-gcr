@@ -1,8 +1,8 @@
 {
     "pubsub": {
         "_type": "object",
-        "_module": "google.cloud.pubsub_v1",
-        "_class": "PublisherClient"
+        "_class": "PublisherClient",
+        "_module": "google.cloud.pubsub_v1"
     },
     "firestore": {
         "_type": "object",
@@ -11,7 +11,7 @@
     },
     "gcsstorer": {
         "_type": "object",
-        "_module": "xialib_gcs",
-        "_class": "GcsStorer"
+        "_class": "GcsStorer",
+        "_module": "xialib_gcs"
     }
 }
