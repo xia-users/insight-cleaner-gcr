@@ -55,5 +55,4 @@ jobs:
         --service-account ${{xia.sa-name}}@${PROJECT_ID}.iam.gserviceaccount.com \
         --region europe-west1 \
         --platform managed \
-        --allow-unauthenticated \
         --no-allow-unauthenticated
