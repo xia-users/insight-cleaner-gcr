@@ -36,16 +36,13 @@ jobs:
         PROJECT_ID=$(gcloud config list --format 'value(core.account)' | sed 's/.*@\(.*\)\.iam\.gserviceaccount.*/\1/')
         gcloud projects add-iam-policy-binding ${PROJECT_ID} \
         --member=serviceAccount:${{xia.sa-name}}@${PROJECT_ID}.iam.gserviceaccount.com \
-        --role=roles/pubsub.publisher
+        --role=roles/logging.logWriter \
         gcloud projects add-iam-policy-binding ${PROJECT_ID} \
         --member=serviceAccount:${{xia.sa-name}}@${PROJECT_ID}.iam.gserviceaccount.com \
-        --role=roles/datastore.user
+        --role=roles/${{xia.db-role}}
         gcloud projects add-iam-policy-binding ${PROJECT_ID} \
         --member=serviceAccount:${{xia.sa-name}}@${PROJECT_ID}.iam.gserviceaccount.com \
-        --role=roles/storage.objectAdmin
-        gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-        --member=serviceAccount:${{xia.sa-name}}@${PROJECT_ID}.iam.gserviceaccount.com \
-        --role=roles/logging.logWriter
+        --role=roles/${{xia.fs-role}}
 
     - name: Deploy
       run: |
