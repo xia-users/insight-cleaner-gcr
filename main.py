@@ -5,7 +5,7 @@ from flask import Flask, request, Response, render_template
 import google.cloud.logging
 import google.auth
 from xialib.service import service_factory
-from pyinsight import Insight, Cleaner
+
 
 # Global Setting
 app = Flask(__name__)
