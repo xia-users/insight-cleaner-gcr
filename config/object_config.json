@@ -19,9 +19,5 @@
             "_name": "gcsstorer"
         }
     },
-    "_deploy": {
-        "name": "cloud-run-insight-cleaner",
-        "user": "insight-cleaner"
-    },
     "_type": "object"
 }
